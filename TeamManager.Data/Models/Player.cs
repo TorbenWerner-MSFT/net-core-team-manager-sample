@@ -14,13 +14,4 @@
 
         public Team Team { get; set; }
     }
-
-    public enum PlayerPosition
-    {
-        Keeper,
-        Defender,
-        Midfielder,
-        Attacker,
-        Substitute
-    }
 }

@@ -1,10 +1,16 @@
 ﻿@model Player
 
 @{
-
 }
 
-<b>Name:</b> @Model.Name <br/>
-<b>Position:</b> @Model.Position <br/>
-<b>ShirtNumber:</b> @Model.ShirtNumber <br/>
-<b>Team Name:</b> @Model.Team.Name
+<div class="row">
+    <div class="col-md-3">
+        <div class="card">
+            <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Player Picture</text></svg>
+            <div class="card-body">
+                <h5 class="card-title">@Model.ShirtNumber - @Model.Name</h5>
+                <p class="card-text">Our <i>@Model.Position</i> Player from Team <strong>@Model.Team.Name</strong></p>
+            </div>
+        </div>
+    </div>
+</div>

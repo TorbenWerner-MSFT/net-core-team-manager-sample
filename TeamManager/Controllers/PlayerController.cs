@@ -2,14 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using TeamManager.Data;
-using TeamManager.Data.Models;
 using TeamManager.Models;
 
 namespace TeamManager.Controllers
 {
     public class PlayerController : Controller
     {
-        private TeamContext _teamContext;
+        private readonly TeamContext _teamContext;
 
         public PlayerController(TeamContext teamContext)
         {
@@ -20,6 +19,7 @@ namespace TeamManager.Controllers
         {
             var players = _teamContext
                 .Players
+                .OrderBy(o => o.ShirtNumber)
                 .ToList();
 
             return View(players);
@@ -31,6 +31,9 @@ namespace TeamManager.Controllers
                 .Players
                 .Include(player => player.Team)
                 .FirstOrDefault(player => player.Id == id);
+
+            if (player == null)
+                return NotFound();
 
             return View(player);
         }
@@ -51,25 +54,108 @@ namespace TeamManager.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Create([Bind("TeamId", "Name", "ShirtNumber", "Position")] CreatePlayerViewModel createPlayerModel)
         {
-            if (ModelState.IsValid)
+            // Not Valid, return form
+            if (!ModelState.IsValid)
             {
-                var player = createPlayerModel.GetPlayer();
+                var teams = _teamContext
+                    .Teams
+                    .ToList();
 
-                _teamContext.Players.Add(player);
-                _teamContext.SaveChanges();
+                createPlayerModel.Teams = teams;
 
-                return RedirectToAction("Index");
+                return View(createPlayerModel);
             }
+
+            // Valid, save data
+            var player = createPlayerModel.GetPlayer();
+
+            _teamContext.Players.Add(player);
+            _teamContext.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int id)
+        {
+            var player = _teamContext
+                .Players
+                .Include(player => player.Team)
+                .FirstOrDefault(player => player.Id == id);
+
+            if (player == null)
+                return NotFound();
 
             var teams = _teamContext
                 .Teams
                 .ToList();
 
-            createPlayerModel.Teams = teams;
+            var model = new EditPlayerViewModel(player)
+            {
+                Teams = teams
+            };
 
-            return View(createPlayerModel);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit([Bind("Id", "TeamId", "Name", "ShirtNumber", "Position")] EditPlayerViewModel editPlayerModel)
+        {
+            // Not Valid, return form
+            if (!ModelState.IsValid)
+            {
+                var teams = _teamContext
+                    .Teams
+                    .ToList();
+
+                editPlayerModel.Teams = teams;
+
+                return View(editPlayerModel);
+            }
+
+            // Valid, save data
+            var player = editPlayerModel.GetPlayer();
+
+            _teamContext.Players.Update(player);
+            _teamContext.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            var player = _teamContext
+                .Players
+                .Include(player => player.Team)
+                .FirstOrDefault(player => player.Id == id);
+
+            if (player == null)
+                return NotFound();
+
+            return View(player);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeletePlayer(int id)
+        {
+            var player = _teamContext
+                .Players
+                .Include(player => player.Team)
+                .FirstOrDefault(player => player.Id == id);
+
+            if (player == null)
+                return NotFound();
+
+            _teamContext.Players.Remove(player);
+            _teamContext.SaveChanges();
+
+            return RedirectToAction("Index");
         }
     }
 }

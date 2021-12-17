@@ -1,11 +1,13 @@
-﻿@model CreatePlayerViewModel
+﻿@model EditPlayerViewModel
 
 @{
 }
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-controller="Player" asp-action="Create" method="post">
+        <form asp-controller="Player" asp-action="Edit" method="post">
+            <input asp-for="Id" type="hidden" />
+
             <div class="row mb-3">
                 <label asp-for="Name" class="col-sm-2 col-form-label"></label>
                 <div class="col-sm-10">
@@ -43,7 +45,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Create!</button>
+            <button type="submit" class="btn btn-primary">Update!</button>
         </form>
     </div>
 </div>
