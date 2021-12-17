@@ -1,0 +1,14 @@
+﻿@model List<Player>
+
+@{
+
+}
+
+<a asp-controller="Player" asp-action="Create">Create Player</a>
+
+<ul>
+    @foreach (var player in Model)
+    {
+        <li> <a asp-controller="Player" asp-action="Detail" asp-route-id="@player.Id">@player.Name</a></li>
+    }
+</ul>

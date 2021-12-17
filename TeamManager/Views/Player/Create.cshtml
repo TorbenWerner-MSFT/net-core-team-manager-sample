@@ -1,0 +1,46 @@
+﻿@model CreatePlayerViewModel
+
+@{
+    
+}
+
+<form asp-controller="Player" asp-action="Create" method="post">
+    <label asp-for="Name"></label>
+    <input asp-for="Name"/>
+    <span asp-validation-for="Name" class="text-danger"></span>
+
+    <br/>
+
+    <label asp-for="ShirtNumber"></label>
+    <input asp-for="ShirtNumber"/>
+    <span asp-validation-for="ShirtNumber" class="text-danger"></span>
+
+    <br/>
+
+    <label asp-for="Position"></label>
+    <input asp-for="Position" />
+    <span asp-validation-for="Position" class="text-danger"></span>
+
+    <br/>
+
+    <label asp-for="TeamId"></label>
+    <select name="TeamId">
+        @foreach(var team in Model.Teams)
+        {
+            <option value="@team.Id">@team.Name</option>
+        }
+    </select>
+    <span asp-validation-for="TeamId" class="text-danger"></span>
+
+    <br/>
+
+    <button type="submit">Create!</button>
+
+    <br/>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+</form>
+
+@section Scripts {
+    <partial name="~/Views/Shared/_ValidationScriptsPartial.cshtml" />
+}
